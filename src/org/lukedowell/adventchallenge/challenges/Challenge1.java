@@ -1,19 +1,17 @@
-package org.lukedowell.adventchallenge.one;
+package org.lukedowell.adventchallenge.challenges;
 
 import org.lukedowell.adventchallenge.ChallengeProcessor;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 
 /**
  * Created by ldowell on 12/7/15.
  */
-public class ChallengeOne extends ChallengeProcessor{
+public class Challenge1 extends ChallengeProcessor{
 
-    public ChallengeOne() {
+    public Challenge1() {
         super(new File("res/one.txt"));
     }
 
@@ -41,6 +39,6 @@ public class ChallengeOne extends ChallengeProcessor{
 
         System.out.println("The final floor is: " + floor);
         System.out.println("The character index that forced santa to visit the basement first is: " + (firstBasementVisit + 1)); // Plus one because programming indices start at 1 :^]
-        System.out.println("Challenge One -- Final floor is:  " + floor);
+
     }
 }

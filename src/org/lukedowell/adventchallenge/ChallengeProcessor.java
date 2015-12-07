@@ -17,6 +17,9 @@ public abstract class ChallengeProcessor {
 
     public abstract void process() throws Exception;
 
+    /**
+     * If they are \n delimited
+     */
     public List<String> getInputStrings() throws IOException {
         List<String> values = new LinkedList<>();
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
@@ -25,5 +28,9 @@ public abstract class ChallengeProcessor {
             values.add(str);
         }
         return values;
+    }
+
+    public String getInput() throws IOException {
+        return new BufferedReader(new FileReader(inputFile)).readLine();
     }
 }
