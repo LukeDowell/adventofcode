@@ -9,7 +9,7 @@ import java.io.FileReader;
 /**
  * Created by ldowell on 12/7/15.
  */
-public class Challenge1 extends ChallengeProcessor{
+public class Challenge1 extends ChallengeProcessor {
 
     public Challenge1() {
         super(new File("res/one.txt"));

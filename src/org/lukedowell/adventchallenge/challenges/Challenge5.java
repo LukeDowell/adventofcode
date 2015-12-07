@@ -24,6 +24,20 @@ public class Challenge5 extends ChallengeProcessor {
 
     @Override
     public void process() throws Exception {
+        getInputStrings().forEach(input -> {
+            boolean hasFailed = false;
+            for(String pattern : REGEX_RULES) {
+                if(!input.matches(pattern)) {
+                    hasFailed = true;
+                }
+            }
 
+            if(!hasFailed) {
+                //yay
+                numNiceStrings++;
+            }
+        });
+
+        System.out.println("The number of nice strings is : " + numNiceStrings);
     }
 }
