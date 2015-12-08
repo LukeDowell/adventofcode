@@ -90,6 +90,11 @@ public class Challenge7 extends ChallengeProcessor {
                         // Since NOT only has one other wire, we know it's the provided wire
                         wire.setSignal(~ w.getSignal()); //wow i hope this is NOT
 
+                    } else if(inputs.length == 1) {
+                        // Simple assignment
+
+                        wire.setSignal(w.getSignal());
+
                     } else {
 
                         /**
@@ -116,6 +121,8 @@ public class Challenge7 extends ChallengeProcessor {
                             secondValue = Integer.parseInt(inputs[2]);
                         } catch(NumberFormatException e) {
                             secondValue = findOrCreateWire(inputs[2]).getSignal();
+                        } catch(Exception e) {
+                            e.printStackTrace();
                         }
 
                         // Only if we have both values...
