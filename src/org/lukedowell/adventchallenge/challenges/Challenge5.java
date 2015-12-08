@@ -3,8 +3,10 @@ package org.lukedowell.adventchallenge.challenges;
 import org.lukedowell.adventchallenge.ChallengeProcessor;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 /**
+ * TODO: finish
  * Created by ldowell on 12/7/15.
  */
 public class Challenge5 extends ChallengeProcessor {
@@ -13,13 +15,12 @@ public class Challenge5 extends ChallengeProcessor {
     int numNiceStrings = 0;
 
     private static final String[] REGEX_RULES = {
-            "[aeiouy]+", // TODO: Fix, needs to find at least 3 vowels
-            "([a-z])\\1{1}", // Repeating characters (eg. gg, dd, tt)
+            "([a-zA-Z])\\1{1}", // Repeating characters (eg. gg, dd, tt) //TODO: This doesn't appear to be working in practice, on regex101 it works fine
             "^((?!(ab|cd|pq|xy)).)*$" // Doesn't contain ab, cd, pq or xy
     };
 
     public Challenge5() {
-        super(null);
+        super(new File("res/five.txt"));
     }
 
     @Override
@@ -33,8 +34,12 @@ public class Challenge5 extends ChallengeProcessor {
             }
 
             if(!hasFailed) {
-                //yay
-                numNiceStrings++;
+                // Check for three vowels
+                int numVowels = input.length() - input.replaceAll("[aeiou]", "").length();
+                if(numVowels >= 3) {
+                    numNiceStrings++;
+                }
+
             }
         });
 
