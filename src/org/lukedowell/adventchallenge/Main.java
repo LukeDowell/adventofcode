@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            new Challenge6().process();
+            new Challenge7().process();
         } catch(Exception e) {
             e.printStackTrace();
         }
