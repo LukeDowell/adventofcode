@@ -5,8 +5,6 @@ import org.lukedowell.adventchallenge.ChallengeProcessor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -59,20 +57,85 @@ public class Challenge7 extends ChallengeProcessor {
             wires.add(childWire);
         });
 
+        // Execuuuuute
+        while(findOrCreateWire("a").getSignal() == null) {
+            wires.forEach(wire -> {
 
-        wires.forEach(parentWire -> {
+                // If this wire has a signal
+                if(wire.getSignal() != null) {
 
-            // If the wire has been given a value other than the default one
-            if(parentWire.getSignal() != -9999) {
-                System.out.println("Wire " + parentWire.getIdentifier() + " has a value of : " + parentWire.getSignal());
-                System.out.println("The following wires rely on " + parentWire.getIdentifier());
-                System.out.println("-------------------------------");
-                for(Wire child : findWiresWithIdentifierInExpression(parentWire.getIdentifier())) {
-                    System.out.println(child.getIdentifier() + " -- " + child.getExpression());
+                    // Try to populate the signal of it's dependants
+                    execute(wire);
                 }
-                System.out.println("===============================");
-            }
-        });
+            });
+        }
+
+        System.out.println("Wire a has signal: " + findOrCreateWire("a").getSignal());
+    }
+
+    /**
+     * Meet and poa tay toes
+     */
+    private void execute(Wire w) {
+        findWiresWithIdentifierInExpression(w.getExpression())
+                .forEach(wire -> {
+                    // For each child, attempt to calculate their signal
+
+                    // Grab the inputs
+                    String[] inputs = wire.getExpression().split(" ");
+
+                    // Stupid not
+                    if(inputs[0].equalsIgnoreCase("NOT")) {
+
+                        // Since NOT only has one other wire, we know it's the provided wire
+                        wire.setSignal(~ w.getSignal()); //wow i hope this is NOT
+
+                    } else {
+
+                        /**
+                         * There is a problem here. input[0] and input[2] are, at their core,
+                         * just values that we are going to mash together with whatever
+                         * bitwise operator is requested. The issue is that each index can
+                         * have either a Wire identifier or a numeric value.
+                         */
+
+                        int firstValue;
+                        int secondValue;
+
+                        // Lets try parsing them as integers and if that fails, then assume its an identifier
+
+                        try {
+                            firstValue = Integer.parseInt(inputs[0]);
+                        } catch(NumberFormatException e) {
+                            firstValue = findOrCreateWire(inputs[0]).getSignal();
+                        }
+
+                        try {
+                            secondValue = Integer.parseInt(inputs[2]);
+                        } catch(NumberFormatException e) {
+                            secondValue = findOrCreateWire(inputs[2]).getSignal();
+                        }
+
+                        switch(inputs[1]) {
+
+                            case "RSHIFT": // >>
+                                wire.setSignal(firstValue >> secondValue);
+                                break;
+
+                            case "LSHIFT": // <<
+                                wire.setSignal(firstValue << secondValue);
+                                break;
+
+                            case "AND": // &
+                                wire.setSignal(firstValue & secondValue);
+                                break;
+
+                            case "OR": // |   inclusive
+                                wire.setSignal(firstValue | secondValue);
+                                break;
+                        }
+                    }
+                });
     }
 
     /**
@@ -101,11 +164,15 @@ public class Challenge7 extends ChallengeProcessor {
      */
     private List<Wire> findWiresWithIdentifierInExpression(String identifier) {
         List<Wire> dependants = new ArrayList<>();
-        Pattern regex = Pattern.compile("\b" + identifier + "\b"); //TODO: wtf why doesn't this work
+
+        //todo: some serious bs incoming
         for(Wire w : wires) {
-            Matcher m = regex.matcher(w.getExpression());
-            if(m.matches()) {
-                dependants.add(w);
+
+            for(String s : w.getExpression().split(" ")) {
+                if(s.equalsIgnoreCase(identifier)) {
+                    dependants.add(w);
+                    break;
+                }
             }
         }
         return dependants;
@@ -117,33 +184,23 @@ public class Challenge7 extends ChallengeProcessor {
     private class Wire {
 
         private final String identifier;
-        private int signal = -9999;
-        private List<Wire> parents;
+        private Integer signal;
         private String expression;
 
         public Wire(String identifier) {
             this.identifier = identifier;
-            parents = new ArrayList<>();
         }
 
         public String getIdentifier() {
             return identifier;
         }
 
-        public int getSignal() {
+        public Integer getSignal() {
             return signal;
         }
 
         public void setSignal(int signal) {
             this.signal = signal;
-        }
-
-        public List<Wire> getParents() {
-            return parents;
-        }
-
-        public void addParent(Wire parent) {
-            parents.add(parent);
         }
 
         public String getExpression() {
