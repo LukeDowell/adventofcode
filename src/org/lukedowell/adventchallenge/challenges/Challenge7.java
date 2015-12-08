@@ -77,7 +77,7 @@ public class Challenge7 extends ChallengeProcessor {
      * Meet and poa tay toes
      */
     private void execute(Wire w) {
-        findWiresWithIdentifierInExpression(w.getExpression())
+        findWiresWithIdentifierInExpression(w.getIdentifier())
                 .forEach(wire -> {
                     // For each child, attempt to calculate their signal
 
@@ -99,8 +99,8 @@ public class Challenge7 extends ChallengeProcessor {
                          * have either a Wire identifier or a numeric value.
                          */
 
-                        int firstValue;
-                        int secondValue;
+                        Integer firstValue = 0;
+                        Integer secondValue = 0;
 
                         // Lets try parsing them as integers and if that fails, then assume its an identifier
 
@@ -110,29 +110,36 @@ public class Challenge7 extends ChallengeProcessor {
                             firstValue = findOrCreateWire(inputs[0]).getSignal();
                         }
 
+                        // CODE REPETITION
+                        // CODE IS WET AS FUCK
                         try {
                             secondValue = Integer.parseInt(inputs[2]);
                         } catch(NumberFormatException e) {
                             secondValue = findOrCreateWire(inputs[2]).getSignal();
                         }
 
-                        switch(inputs[1]) {
+                        // Only if we have both values...
+                        if(firstValue != null && secondValue != null) {
+                            switch(inputs[1]) {
 
-                            case "RSHIFT": // >>
-                                wire.setSignal(firstValue >> secondValue);
-                                break;
+                                case "RSHIFT": // >>
+                                    wire.setSignal(firstValue >> secondValue);
+                                    break;
 
-                            case "LSHIFT": // <<
-                                wire.setSignal(firstValue << secondValue);
-                                break;
+                                case "LSHIFT": // <<
+                                    wire.setSignal(firstValue << secondValue);
+                                    break;
 
-                            case "AND": // &
-                                wire.setSignal(firstValue & secondValue);
-                                break;
+                                case "AND": // &
+                                    wire.setSignal(firstValue & secondValue);
+                                    break;
 
-                            case "OR": // |   inclusive
-                                wire.setSignal(firstValue | secondValue);
-                                break;
+                                case "OR": // |   inclusive
+                                    wire.setSignal(firstValue | secondValue);
+                                    break;
+                            }
+
+                            System.out.println(wire.getIdentifier() + " -- signal processed!");
                         }
                     }
                 });
@@ -167,13 +174,16 @@ public class Challenge7 extends ChallengeProcessor {
 
         //todo: some serious bs incoming
         for(Wire w : wires) {
-
-            for(String s : w.getExpression().split(" ")) {
-                if(s.equalsIgnoreCase(identifier)) {
-                    dependants.add(w);
-                    break;
+            if (!w.getIdentifier().equalsIgnoreCase(identifier)) {
+                for(String s : w.getExpression().split(" ")) {
+                    if(s.equalsIgnoreCase(identifier)) {
+                        dependants.add(w);
+                        break;
+                    }
                 }
             }
+
+
         }
         return dependants;
     }
