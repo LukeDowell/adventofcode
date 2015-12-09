@@ -178,8 +178,6 @@ public class Challenge7 extends ChallengeProcessor {
      */
     private List<Wire> findWiresWithIdentifierInExpression(String identifier) {
         List<Wire> dependants = new ArrayList<>();
-
-        //todo: some serious bs incoming
         for(Wire w : wires) {
             if (!w.getIdentifier().equalsIgnoreCase(identifier)) {
                 for(String s : w.getExpression().split(" ")) {
@@ -189,8 +187,6 @@ public class Challenge7 extends ChallengeProcessor {
                     }
                 }
             }
-
-
         }
         return dependants;
     }
