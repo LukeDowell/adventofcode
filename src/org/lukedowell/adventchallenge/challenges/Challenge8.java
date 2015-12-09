@@ -24,8 +24,11 @@ public class Challenge8 extends ChallengeProcessor {
     public void process() throws Exception {
         getInputStrings().forEach(string -> {
             // Find the number of characters in the code representation of the string
-            totalNumCodeChars += string.length();
-            totalNumMemoryChars += getNumMemoryChars(string);
+            int numCodeChars = string.length();
+            int numMemoryChars = getNumMemoryChars(string);
+
+            totalNumCodeChars += numCodeChars;
+            totalNumMemoryChars += numMemoryChars;
         });
 
         System.out.println("The total number of CODE characters is : " + totalNumCodeChars);
@@ -58,17 +61,43 @@ public class Challenge8 extends ChallengeProcessor {
         String escapesRemoved = quotesRemoved.replace("\\\"", "@")
                                                 .replace("\\\\", "@");
 
+
+        String hexRemoved = removeHexSequences(escapesRemoved);
+
+        return hexRemoved.length();
+    }
+
+    /**
+     * Removes all hex sequences (eg. \x12, \xab) from a given
+     * string, leaving only the last character of the sequence behind.
+     *
+     * ab\x12ab\x12 would become ab2ab2
+     *
+     * @param input
+     *      Provided string
+     * @return
+     *      Provided string without hex sequences
+     */
+    private String removeHexSequences(String input) {
         // Now we remove the hex escape sequence
-        // We are going to process the string backwards
-        for(int i = escapesRemoved.length()-1; i > 0; i--) {
-            char c = escapesRemoved.charAt(i);
+        for(int i = 0; i < input.length(); i++) {
+
+            // Get the character at the current index
+            char c = input.charAt(i);
+
+            // Check to see if it is a backslash
             if(c == '\\') {
+
                 // We have captured the \, check to see if the previous character was an x
-                if(escapesRemoved.charAt(i+1) == 'x') {
-                    // Store
+                if(input.charAt(i+1) == 'x') {
+
+                    // Recursively remove all hex sequences
+                    String replaced = input.replace(input.substring(i, i+3), "");
+                    return removeHexSequences(replaced);
                 }
             }
         }
-        return escapesRemoved.length();
+
+        return input;
     }
 }
