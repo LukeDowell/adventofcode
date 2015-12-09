@@ -1,6 +1,8 @@
 package org.lukedowell.adventchallenge.challenges.challenge9;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by ldowell on 12/9/15.
@@ -9,7 +11,7 @@ public class CityManager {
 
 
     /** A collection of all cities available to tour */
-    private static ArrayList<City> cities = new ArrayList<>();
+    private static List<City> cities = new LinkedList<>();
 
     public static void addCity(City city) {
         cities.add(city);

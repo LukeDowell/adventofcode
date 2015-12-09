@@ -1,6 +1,7 @@
 package org.lukedowell.adventchallenge.challenges.challenge9;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Representation of an endpoint in our
@@ -17,6 +18,10 @@ public class City {
     public City(String name) {
         this.name = name;
         routes = new HashMap<>();
+    }
+
+    public Map<City, Integer> getRoutes() {
+        return routes;
     }
 
     public void addDestination(City city, int distance) {

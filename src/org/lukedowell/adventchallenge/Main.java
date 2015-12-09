@@ -1,6 +1,7 @@
 package org.lukedowell.adventchallenge;
 
 import org.lukedowell.adventchallenge.challenges.*;
+import org.lukedowell.adventchallenge.challenges.challenge9.Challenge9;
 
 /**
  *
@@ -12,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            new Challenge8().process();
+            new Challenge9().process();
         } catch(Exception e) {
             e.printStackTrace();
         }
