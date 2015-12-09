@@ -36,7 +36,7 @@ public class Tour {
     }
 
     public void setCity(int index, City city) {
-        tour.add(index, city);
+        tour.set(index, city);
 
         // Since we have modified the tour, these values are no longer accurate
         fitness = 0;
@@ -58,7 +58,7 @@ public class Tour {
                 City origin = getCity(cityIndex);
 
                 if(cityIndex+1 < tour.size()) {
-                    City destination = getCity(cityIndex);
+                    City destination = getCity(cityIndex+1);
                     tourDistance += origin.getDistanceToCity(destination);
                 }
 
