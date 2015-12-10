@@ -5,8 +5,8 @@ package org.lukedowell.adventchallenge.challenges.challenge9;
  */
 public class GeneticAlgorithm {
 
-    private static final double mutationRate = 0.015;
-    private static final int tournamentSize = 5;
+    private static final double mutationRate = 0.2;
+    private static final int tournamentSize = 10;
     private static final boolean elitism = true;
 
     public static Population evolvePopulation(Population pop) {
@@ -23,6 +23,10 @@ public class GeneticAlgorithm {
             Tour parent1 = tournamentSelection(pop);
             Tour parent2 = tournamentSelection(pop);
 
+            while(parent2.equals(parent1)) {
+                parent2 = tournamentSelection(pop);
+            }
+
             Tour child = crossover(parent1, parent2);
 
             newPop.saveTour(i, child);
@@ -35,37 +39,65 @@ public class GeneticAlgorithm {
         return newPop;
     }
 
+    /**
+     * Breeds a child from two parent tours. Ordered crossover is
+     * the goal, we will take a subset of routes from parent 1 and
+     * insert them into the child. Then we will fill in remaining
+     * destinations from parent 2 in the order that they are found
+     * @param parent1
+     * @param parent2
+     * @return
+     */
     public static Tour crossover(Tour parent1, Tour parent2) {
         //TODO: wtf is this shit clean it up
         Tour child = new Tour();
 
+        // Find positions for the subsection to add to the child
         int startPos = (int) (Math.random() * parent1.getSize());
-        int endPos = (int) (Math.random() * parent1.getSize());
+        int endPos = startPos;
 
-        for(int i = 0; i < child.getSize(); i++) {
+        // Ensure they won't be the same value
+        while(endPos == startPos) {
+            endPos = (int) (Math.random() * parent1.getSize());
+        }
 
-            if(startPos < endPos && i > startPos && i < endPos) {
+        // Add the sub section to the child tour
+        for(int i = 0 ; i < child.getSize(); i++) {
+
+            // If the start position is less than the end position...
+            if(startPos < endPos &&
+                    i > startPos &&
+                    i < endPos) {
+
+                // Set the child city
                 child.setCity(i, parent1.getCity(i));
-            } else if(startPos > endPos) {
-                if(!(i < startPos && i > endPos)) {
-                    child.setCity(i, parent1.getCity(i));
-                }
+
+            } else if(startPos > endPos &&
+                        !(i < startPos && i > endPos)) { //wtf lee from theprojectspot
+                child.setCity(i, parent1.getCity(i));
             }
         }
 
+        // Loop through the second parents' tour
         for(int i = 0; i < parent2.getSize(); i++) {
 
-            if(!child.containsCity(parent2.getCity(i))) {
-                for(int j = 0; j < child.getSize(); j++) {
+            // Pull out the parents' city
+            City parentCity = parent2.getCity(i);
 
+            // If the child doesn't have the city, add it
+            if(!child.containsCity(parentCity)) {
+
+                // Loop to find the first open spot
+                for(int j = 0; j < child.getSize(); j++) {
                     if(child.getCity(j) == null) {
-                        child.setCity(j, parent2.getCity(j));
+                        child.setCity(j, parentCity);
                         break;
                     }
                 }
             }
         }
 
+        // Baby been born yo
         return child;
     }
 

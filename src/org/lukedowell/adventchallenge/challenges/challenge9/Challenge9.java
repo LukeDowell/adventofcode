@@ -30,17 +30,21 @@ public class Challenge9 extends ChallengeProcessor {
             int distance = Integer.parseInt(tour_data[4]);
 
             origin.addDestination(destination, distance);
+            origin.addDestination(origin, 0);
+
             destination.addDestination(origin, distance);
+            destination.addDestination(destination, 0);
         });
 
         cities.forEach(CityManager::addCity);
 
-        Population seed = new Population(15, true);
+        Population seed = new Population(50, true);
         System.out.println("Initial distance: " + seed.getFittest().getDistance());
 
         // See what happens after 100 generations
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 1000; i++) {
             seed = GeneticAlgorithm.evolvePopulation(seed);
+            System.out.println(seed.getFittest());
         }
 
         System.out.println("Final distance: " + seed.getFittest().getDistance());
