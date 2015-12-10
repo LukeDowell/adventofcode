@@ -1,0 +1,12 @@
+Seattle 126 141
+Los Angeles 115 532
+Denver 430 419
+St. Louis 744 451
+Dallas 599 619
+Miami 1021 776
+New York 1078 337
+Boston 1124 282
+Chicago 791 360
+Salem 92 212
+Boise 216 280
+Salt Lake City 288 374

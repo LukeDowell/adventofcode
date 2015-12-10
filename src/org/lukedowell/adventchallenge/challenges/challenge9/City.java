@@ -11,28 +11,18 @@ public class City {
     /** The name of the city */
     private String name;
 
-    /** A list of tours branching out from this city */
-    private HashMap<City, Integer> routes;
+    private int x;
+    private int y;
 
     /**
      * Creates a new city
      * @param name
      *      The name of the city
      */
-    public City(String name) {
+    public City(String name, int x, int y) {
         this.name = name;
-        routes = new HashMap<>();
-    }
-
-    /**
-     * Adds a destination to this city
-     * @param city
-     *  The city to end at
-     * @param distance
-     *  The distance to the given city
-     */
-    public void addDestination(City city, int distance) {
-        routes.put(city, distance);
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -41,11 +31,19 @@ public class City {
      * @return
      *      The distance to the provided city
      */
-    public int getDistanceToCity(City city) {
-        if(routes == null || routes.get(city) == null) {
-            System.err.println("wtf");
-        }
-        return routes.get(city);
+    public double getDistanceToCity(City city) {
+        int xDifference = city.getX() - getX();
+        int yDifference = city.getY() - getY();
+
+        return Math.sqrt((xDifference * xDifference + yDifference * yDifference));
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public String getName() {
@@ -54,7 +52,8 @@ public class City {
 
     @Override
     public String toString() {
-        return getName();
+
+        return getName() + " -- " + getX() + " , " + getY();
     }
 
     @Override

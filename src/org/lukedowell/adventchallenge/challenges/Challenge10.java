@@ -9,7 +9,6 @@ import java.io.File;
  */
 public class Challenge10 extends ChallengeProcessor{
 
-    public static final int =
     public Challenge10() {
         super(null);
     }

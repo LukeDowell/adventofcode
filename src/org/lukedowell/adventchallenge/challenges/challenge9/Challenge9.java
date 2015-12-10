@@ -1,7 +1,9 @@
 package org.lukedowell.adventchallenge.challenges.challenge9;
 
 import org.lukedowell.adventchallenge.ChallengeProcessor;
+import org.lukedowell.adventchallenge.challenges.challenge9.gui.TourGuide;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,53 +15,38 @@ import java.util.List;
  */
 public class Challenge9 extends ChallengeProcessor {
 
-    List<City> cities;
-
-    public Challenge9() {
-        super(new File("res/nine.txt"));
-        cities = new LinkedList<>();
+    public Challenge9() throws ClassNotFoundException {
+        super(new File("res/tryhard.txt"));
+        Class.forName("org.lukedowell.adventchallenge.challenges.challenge9.CityManager");
     }
 
     @Override
     public void process() throws Exception {
         getInputStrings().forEach(tour -> {
             String[] tour_data = tour.split(" ");
+            int cityY = Integer.parseInt(tour_data[tour_data.length-1]);
+            int cityX = Integer.parseInt(tour_data[tour_data.length-2]);
 
-            City origin = findOrCreate(tour_data[0]);
-            City destination = findOrCreate(tour_data[2]);
-            int distance = Integer.parseInt(tour_data[4]);
+            String cityName = "";
 
-            origin.addDestination(destination, distance);
-            origin.addDestination(origin, 0);
+            for(int i = 0 ; i < tour_data.length - 2; i++) {
+                cityName += tour_data[i];
+            }
 
-            destination.addDestination(origin, distance);
-            destination.addDestination(destination, 0);
+            City newCity = new City(cityName, cityX, cityY);
+            CityManager.addCity(newCity);
+            System.out.println(newCity);
         });
 
-        cities.forEach(CityManager::addCity);
+
 
         Population seed = new Population(50, true);
-        System.out.println("Initial distance: " + seed.getFittest().getDistance());
+        EventQueue.invokeLater(TourGuide::new);
 
         // See what happens after 100 generations
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 50; i++) {
             seed = GeneticAlgorithm.evolvePopulation(seed);
-            System.out.println(seed.getFittest());
+            TourGuide.addTour(seed.getFittest());
         }
-
-        System.out.println("Final distance: " + seed.getFittest().getDistance());
-
-        System.out.println(seed.getFittest());
-    }
-
-    City findOrCreate(String name) {
-        for(City c : cities) {
-            if(c.getName().equalsIgnoreCase(name)) {
-                return c;
-            }
-        }
-        City c = new City(name);
-        cities.add(c);
-        return c;
     }
 }
