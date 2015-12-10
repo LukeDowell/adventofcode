@@ -49,6 +49,11 @@ public class Tour {
 
 
     /**
+     * Generate an arbitrary fitness score. This challenge
+     * wants the LEAST total distance, but if, for example,
+     * you wanted the MOST distance you could change the / to a
+     * *
+     *
      * @return
      *      The fitness score this tour receives
      */

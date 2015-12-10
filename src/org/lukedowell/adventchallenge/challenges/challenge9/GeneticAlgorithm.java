@@ -1,23 +1,41 @@
 package org.lukedowell.adventchallenge.challenges.challenge9;
 
 /**
+ * GA Implementation for the traveling salesman
  * Created by ldowell on 12/9/15.
  */
 public class GeneticAlgorithm {
 
+    /** 20% of the time, mutate a tour */
     private static final double mutationRate = 0.2;
+
+    /** The number of individuals to pull out of each tour for the arena */
     private static final int tournamentSize = 10;
+
+    /** Whether or not our application will be pretentious */
     private static final boolean elitism = true;
 
+    /**
+     * Evolves a given population
+     * @param pop
+     *      The population to evolve
+     * @return
+     *      The evolved population
+     */
     public static Population evolvePopulation(Population pop) {
+
+        // Create a new, uninitialized population
         Population newPop = new Population(pop.getSize(), false);
 
+        // If elitism is enabled, we don't want to override our fittest individual
         int elitismOffset = 0;
         if(elitism) {
+            // Save the elite
             newPop.saveTour(0, pop.getFittest());
             elitismOffset = 1;
         }
 
+        // Loop through, possibly skipping the elite member, and breed for the new population
         for(int i = elitismOffset; i < newPop.getSize(); i++) {
 
             Tour parent1 = tournamentSelection(pop);
@@ -27,11 +45,13 @@ public class GeneticAlgorithm {
                 parent2 = tournamentSelection(pop);
             }
 
+            // buzz buzz chirp chirp
             Tour child = crossover(parent1, parent2);
 
             newPop.saveTour(i, child);
         }
 
+        // Throw a wrench into it
         for(int i = elitismOffset; i < newPop.getSize(); i++) {
             mutate(newPop.getTour(i));
         }
@@ -101,6 +121,12 @@ public class GeneticAlgorithm {
         return child;
     }
 
+    /**
+     * Our mutation is implemented by swapping city positions in
+     * a given tour
+     * @param tour
+     *      The tour to potentially mutate
+     */
     private static void mutate(Tour tour) {
 
         for(int tourPos1 = 0; tourPos1 < tour.getSize(); tourPos1++) {
@@ -117,6 +143,17 @@ public class GeneticAlgorithm {
             }
         }
     }
+
+    /**
+     * Tournament selection style for a population. Members are selected
+     * randomly and then pit against each other
+     *
+     * @param pop
+     *      The population to brutalize
+     * @return
+     *      The fittest member of the randomly selected group from
+     *      the given population
+     */
     private static Tour tournamentSelection(Population pop) {
 
         Population tournament = new Population(tournamentSize, false);

@@ -6,8 +6,16 @@ package org.lukedowell.adventchallenge.challenges.challenge9;
  */
 public class Population {
 
-    Tour[] tours;
+    /** The set of tours that belong to this population */
+    private Tour[] tours;
 
+    /**
+     * Creates a new population
+     * @param populationSize
+     *      The amount of tours we want this population to have
+     * @param initialize
+     *      Whether or not we should ask the tours to initialize themselves
+     */
     public Population(int populationSize, boolean initialize) {
         tours = new Tour[populationSize];
 
@@ -20,14 +28,12 @@ public class Population {
         }
     }
 
-    public void saveTour(int index, Tour tour) {
-        tours[index] = tour;
-    }
-
-    public Tour getTour(int index) {
-        return tours[index];
-    }
-
+    /**
+     * Returns the tour with the highest
+     * fitness score in this population
+     * @return
+     *      A tour
+     */
     public Tour getFittest() {
         Tour fittest = tours[0];
         // Loop through individuals to find fittest
@@ -38,6 +44,23 @@ public class Population {
         }
         return fittest;
     }
+
+    /**
+     * Saves a tour at a given index
+     * @param index
+     *      The index to place the tour at
+     * @param tour
+     *      The tour to save
+     */
+    public void saveTour(int index, Tour tour) {
+        tours[index] = tour;
+    }
+
+    public Tour getTour(int index) {
+        return tours[index];
+    }
+
+
 
     public int getSize() {
         return tours.length;
