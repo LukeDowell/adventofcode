@@ -2,7 +2,6 @@ package org.lukedowell.adventchallenge.challenges;
 
 import org.lukedowell.adventchallenge.ChallengeProcessor;
 
-import java.io.File;
 
 /**
  *
@@ -19,7 +18,7 @@ import java.io.File;
 public class Challenge11 extends ChallengeProcessor {
 
     /** Puzzle seed */
-    public static final String SEED = "hepxcrrq";
+    public static final String SEED = "hepxxyzz";
 
     /** Alphabeeeeet */
     private char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
@@ -30,7 +29,7 @@ public class Challenge11 extends ChallengeProcessor {
 
     @Override
     public void process() throws Exception {
-        String password = SEED;
+        String password = incrementString(SEED); // Part two complete
 
         while(!meetsPasswordRequirements(password)) {
             password = incrementString(password);
@@ -51,7 +50,7 @@ public class Challenge11 extends ChallengeProcessor {
     private boolean meetsPasswordRequirements(String password) {
         return
                 hasIncreasingStraight(password) &&
-                hasPairs(password) &&
+                hasDiscretePairs(password) &&
                 !containsBannedCharacters(password);
     }
 
@@ -65,19 +64,44 @@ public class Challenge11 extends ChallengeProcessor {
      * @return
      */
     private boolean hasIncreasingStraight(String password) {
-        // Loop through each letter recursively
 
+        // Loop through each letter
         for( int i = 0; i < password.length(); i++) {
 
             // The character that might begin the series
             char seriesChar = password.charAt(i);
-            int seriesIndex = indexOf(seriesChar);
+
+            // The index of the previous character in the series
+            int lastIndex = indexOf(seriesChar);
+
+            // The total length of the series
+            int seriesLength = 1;
 
             // Loop ahead and see if the password contains a series
             for(int j = i + 1; j < password.length(); j++) {
 
+                // Pull out the next character and grab its index
+                char nextChar = password.charAt(j);
+                int nextIndex = indexOf(nextChar);
+
+                // If it is the next character in the series, increase the series length by one and store the new index
+                if(lastIndex + 1 == nextIndex) {
+                    seriesLength++;
+                    lastIndex = nextIndex;
+                } else {
+                    // If the series is broken, leave the loop
+                    break;
+                }
+
+            }
+
+            // If we met the conditions, return true
+            if(seriesLength >= 3) {
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -85,8 +109,39 @@ public class Challenge11 extends ChallengeProcessor {
      * @param password
      * @return
      */
-    private boolean hasPairs(String password) {
+    private boolean hasDiscretePairs(String password) {
 
+        int firstPairStartingIndex = -1;
+        int secondPairStartingIndex = -1;
+
+        // Find the first pair
+        for(int i = 0; i < password.length() - 1; i++) {
+
+            // Grab the current and next character
+            char currentChar = password.charAt(i);
+            char nextChar = password.charAt(i + 1);
+
+            // If the two characters match
+            if(currentChar == nextChar) {
+
+                // The first pair has already been set
+                if(firstPairStartingIndex > -1) {
+
+                    // Check to see if we are far enough away (ie. not overlapping)
+                    if(i - firstPairStartingIndex >= 2) {
+                        secondPairStartingIndex = i;
+                    }
+
+                } else {
+                    // The first pair has not been set
+                    firstPairStartingIndex = i;
+                }
+            }
+        }
+
+        return
+                firstPairStartingIndex > -1 &&
+                secondPairStartingIndex > -1;
     }
 
     /**
