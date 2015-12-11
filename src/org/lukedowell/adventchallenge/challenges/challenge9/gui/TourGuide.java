@@ -44,10 +44,8 @@ public class TourGuide extends JFrame {
                         DrawPanel.setActiveTour(tours.get(nextSlide));
 
                         System.out.println("Switched from: " + currentSlide +" to " + nextSlide);
-                        System.out.println("There are " + tours.size() + " to choose from.");
 
-                        drawPanel.revalidate();
-                        drawPanel.repaint();
+                        revalidate();
                     }
                 }
             }
